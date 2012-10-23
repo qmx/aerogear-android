@@ -171,4 +171,24 @@ public class Pipeline {
         return pipes.get(name);
     }
 
+    private Pipe addPipe(String name, Class klass, URL url, Type type) {
+        Pipe pipe = PipeFactory.createPipe(type, klass, url);
+        pipes.put(name, pipe);
+        return pipe;
+    }
+
+    private URL appendEndpoint(URL baseURL, String endpoint) {
+
+        try {
+            // TODO Move to helper?
+            if( !baseURL.toString().endsWith("/")) {
+                endpoint = "/" + endpoint;
+            }
+            return new URL(baseURL + endpoint + "/");
+        } catch (MalformedURLException e) {
+            Log.e("AeroGear", e.getMessage());
+            return null;
+        }
+    }
+
 }
