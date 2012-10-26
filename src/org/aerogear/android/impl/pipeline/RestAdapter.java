@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 import java.lang.reflect.Array;
 import org.aerogear.android.Callback;
+import org.aerogear.android.authentication.AuthenticationModule;
 import org.aerogear.android.core.HttpProvider;
 import org.aerogear.android.pipeline.Pipe;
 
@@ -50,6 +51,9 @@ public final class RestAdapter<T> implements Pipe<T> {
      */
     private final Class<T[]> arrayKlass;
     private HttpProvider httpProvider;
+
+
+	private AuthenticationModule authModule;
 
     public RestAdapter(Class<T> klass, HttpProvider httpProvider) {
         this.klass = klass;
@@ -83,7 +87,7 @@ public final class RestAdapter<T> implements Pipe<T> {
             @Override
             protected AsyncTaskResult doInBackground(Void... voids) {
                 try {
-
+                    applyAuthToken();
                     byte[] responseBody = httpProvider.get().getBody();
                     String responseAsString = new String(responseBody, "utf-8");
                     T[] resultArray = GSON.fromJson(responseAsString, arrayKlass);
@@ -125,11 +129,14 @@ public final class RestAdapter<T> implements Pipe<T> {
             @Override
             protected AsyncTaskResult doInBackground(Void... voids) {
                 try {
+
                     String body = GSON.toJson(data);
+                    applyAuthToken();
+
                     if (id == null || id.length() == 0) {
-                        httpProvider.post(GSON.toJson(data));
+                        httpProvider.post(body);
                     } else {
-                        httpProvider.put(id, GSON.toJson(data));
+                        httpProvider.put(id, body);
 
                     }
                     return new AsyncTaskResult(null);
@@ -159,6 +166,7 @@ public final class RestAdapter<T> implements Pipe<T> {
             @Override
             protected AsyncTaskResult doInBackground(Void... voids) {
                 try {
+                	applyAuthToken();
                     return new AsyncTaskResult(httpProvider.delete(id));
                 } catch (Exception e) {
                     return new AsyncTaskResult(e);
@@ -212,5 +220,19 @@ public final class RestAdapter<T> implements Pipe<T> {
         }
 
     }
+
+	@Override
+	public void setAuthenticationModule(AuthenticationModule module) {
+		this.authModule = module;
+	}
+	
+	/**
+	 * Apply authentication if the token is present
+	 */
+	private void applyAuthToken() {
+		if (authModule != null && authModule.isAuthenticated()) {
+			this.httpProvider.setDefaultHeader("Auth-Token", authModule.getAuthToken());
+		}
+	}
 
 }
