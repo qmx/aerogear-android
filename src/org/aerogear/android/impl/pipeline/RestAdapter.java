@@ -18,25 +18,17 @@
 package org.aerogear.android.impl.pipeline;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import com.google.gson.Gson;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import org.aerogear.android.Callback;
 import org.aerogear.android.authentication.AuthenticationModule;
 import org.aerogear.android.core.HttpProvider;
 import org.aerogear.android.pipeline.Pipe;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
-
-
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.aerogear.android.authentication.AuthValue;
 
 /**
  * Rest implementation of {@link Pipe}.

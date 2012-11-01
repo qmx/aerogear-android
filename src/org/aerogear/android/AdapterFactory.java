@@ -18,10 +18,10 @@
 package org.aerogear.android;
 
 import org.aerogear.android.datamanager.IdGenerator;
-import org.aerogear.android.impl.datamanager.MemoryStorage;
 import org.aerogear.android.datamanager.Store;
-import org.aerogear.android.impl.datamanager.StoreType;
 import org.aerogear.android.impl.core.HttpRestProvider;
+import org.aerogear.android.impl.datamanager.MemoryStorage;
+import org.aerogear.android.impl.datamanager.StoreType;
 import org.aerogear.android.impl.pipeline.RestAdapter;
 import org.aerogear.android.impl.pipeline.Type;
 import org.aerogear.android.pipeline.Pipe;
