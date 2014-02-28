@@ -333,40 +333,40 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
     static class CallbackHandler<T> implements Runnable {
 
         private final LoaderAdapter<T> adapter;
-        private final AbstractPipeLoader<T> modernLoader;
+        private final AbstractPipeLoader<T> loader;
         private final Object data;
 
         public CallbackHandler(LoaderAdapter<T> adapter,
                 AbstractPipeLoader loader, Object data) {
             super();
             this.adapter = adapter;
-            this.modernLoader = loader;
+            this.loader = loader;
             this.data = data;
         }
 
         @Override
         public void run() {
-            if (modernLoader.hasException()) {
-                final Exception exception = modernLoader.getException();
+            if (loader.hasException()) {
+                final Exception exception = loader.getException();
                 Log.e(TAG, exception.getMessage(), exception);
-                if (modernLoader.getCallback() instanceof AbstractFragmentCallback) {
-                    adapter.fragmentFailure(modernLoader.getCallback(),
+                if (loader.getCallback() instanceof AbstractFragmentCallback) {
+                    adapter.fragmentFailure(loader.getCallback(),
                             exception);
-                } else if (modernLoader.getCallback() instanceof AbstractActivityCallback) {
-                    adapter.activityFailure(modernLoader.getCallback(),
+                } else if (loader.getCallback() instanceof AbstractActivityCallback) {
+                    adapter.activityFailure(loader.getCallback(),
                             exception);
                 } else {
-                    modernLoader.getCallback().onFailure(exception);
+                    loader.getCallback().onFailure(exception);
                 }
 
             } else {
 
-                if (modernLoader.getCallback() instanceof AbstractFragmentCallback) {
-                    adapter.fragmentSuccess(modernLoader.getCallback(), data);
-                } else if (modernLoader.getCallback() instanceof AbstractActivityCallback) {
-                    adapter.activitySuccess(modernLoader.getCallback(), data);
+                if (loader.getCallback() instanceof AbstractFragmentCallback) {
+                    adapter.fragmentSuccess(loader.getCallback(), data);
+                } else if (loader.getCallback() instanceof AbstractActivityCallback) {
+                    adapter.activitySuccess(loader.getCallback(), data);
                 } else {
-                    modernLoader.getCallback().onSuccess((T) data);
+                    loader.getCallback().onSuccess((T) data);
                 }
             }
 
